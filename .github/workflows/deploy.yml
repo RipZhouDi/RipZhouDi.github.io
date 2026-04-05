@@ -16,6 +16,15 @@ jobs:
     steps:
       - name: Checkout repository using git
         uses: actions/checkout@v4
+
+      # --- 新增步骤：强制指定 Node.js v22 ---
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm' # 开启缓存，加快后续构建速度
+      # ------------------------------------
+
       - name: Install, build, and upload site
         uses: withastro/action@v3
 
