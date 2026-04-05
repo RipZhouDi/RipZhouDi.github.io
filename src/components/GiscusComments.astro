@@ -1,0 +1,87 @@
+---
+const giscusRepo = import.meta.env.PUBLIC_GISCUS_REPO ?? 'RipZhouDi/RipZhouDi.github.io';
+const giscusRepoId = import.meta.env.PUBLIC_GISCUS_REPO_ID;
+const giscusCategory = import.meta.env.PUBLIC_GISCUS_CATEGORY ?? 'General';
+const giscusCategoryId = import.meta.env.PUBLIC_GISCUS_CATEGORY_ID;
+
+const commentsEnabled = Boolean(giscusRepoId && giscusCategoryId);
+---
+
+<section class="comments-block" aria-label="评论区">
+	<h2>评论交流</h2>
+	{
+		commentsEnabled ? (
+			<div class="comments-panel">
+				<script
+					src="https://giscus.app/client.js"
+					data-repo={giscusRepo}
+					data-repo-id={giscusRepoId}
+					data-category={giscusCategory}
+					data-category-id={giscusCategoryId}
+					data-mapping="pathname"
+					data-strict="1"
+					data-reactions-enabled="1"
+					data-emit-metadata="0"
+					data-input-position="top"
+					data-theme="dark_dimmed"
+					data-lang="zh-CN"
+					crossorigin="anonymous"
+					async
+				></script>
+			</div>
+		) : (
+			<p class="comments-hint">
+				已接入 Giscus 组件。请在环境变量中配置 PUBLIC_GISCUS_REPO_ID 与
+				PUBLIC_GISCUS_CATEGORY_ID 后即可启用。
+			</p>
+		)
+	}
+</section>
+
+<script is:inline>
+	(() => {
+		const mapTheme = (theme) => (theme === 'light' ? 'light' : 'dark_dimmed');
+		const syncGiscusTheme = () => {
+			const frame = document.querySelector('iframe.giscus-frame');
+			if (!frame || !frame.contentWindow) return;
+			const currentTheme = mapTheme(document.documentElement.dataset.theme);
+			frame.contentWindow.postMessage(
+				{
+					giscus: {
+						setConfig: {
+							theme: currentTheme,
+						},
+					},
+				},
+				'https://giscus.app',
+			);
+		};
+
+		window.addEventListener('theme-changed', syncGiscusTheme);
+		window.addEventListener('load', syncGiscusTheme);
+	})();
+</script>
+
+<style>
+	.comments-block {
+		margin-top: 2rem;
+	}
+
+	.comments-block h2 {
+		font-size: 1.25rem;
+		margin: 0 0 0.8rem;
+	}
+
+	.comments-panel,
+	.comments-hint {
+		padding: 1rem;
+		border-radius: 1rem;
+		border: 1px solid var(--line);
+		background: color-mix(in srgb, var(--bg-card) 72%, transparent);
+	}
+
+	.comments-hint {
+		font-size: 0.95rem;
+		color: var(--text-soft);
+	}
+</style>

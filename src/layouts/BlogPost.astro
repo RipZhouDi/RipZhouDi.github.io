@@ -1,86 +1,191 @@
 ---
 import { Image } from 'astro:assets';
+import type { MarkdownHeading } from 'astro';
 import type { CollectionEntry } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
+import GiscusComments from '../components/GiscusComments.astro';
 import Header from '../components/Header.astro';
+import TableOfContents from '../components/TableOfContents.astro';
 
-type Props = CollectionEntry<'blog'>['data'];
+interface Props extends CollectionEntry<'blog'>['data'] {
+	headings?: MarkdownHeading[];
+	readingTime?: string;
+}
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, headings = [], readingTime } = Astro.props as Props;
 ---
 
-<html lang="en">
+<html lang="zh-CN">
 	<head>
 		<BaseHead title={title} description={description} />
-		<style>
-			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
-			}
-			.hero-image {
-				width: 100%;
-			}
-			.hero-image img {
-				display: block;
-				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
-			}
-			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
-			}
-			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
-			}
-			.title h1 {
-				margin: 0 0 0.5em 0;
-			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
-			}
-			.last-updated-on {
-				font-style: italic;
-			}
-		</style>
 	</head>
 
 	<body>
 		<Header />
 		<main>
-			<article>
-				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
-				</div>
-				<div class="prose">
-					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
+			<article class="post-layout">
+				<div class="post-main">
+					{heroImage && (
+						<div class="hero-image">
+							<Image width={1200} height={630} src={heroImage} alt={title} />
+						</div>
+					)}
+
+					<header class="post-header glass-panel">
+						<p class="meta-line">
+							<span><FormattedDate date={pubDate} /></span>
+							{readingTime && <span>{readingTime}</span>}
 							{
 								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
+									<span class="updated-date">
+										更新于 <FormattedDate date={updatedDate} />
+									</span>
 								)
 							}
-						</div>
+						</p>
 						<h1>{title}</h1>
-						<hr />
-					</div>
-					<slot />
+						<p>{description}</p>
+					</header>
+
+					<section class="article-shell">
+						<div class="article-content">
+							<slot />
+						</div>
+					</section>
+
+					<GiscusComments />
 				</div>
+
+				<aside class="post-side">
+					<TableOfContents headings={headings} />
+				</aside>
 			</article>
 		</main>
 		<Footer />
 	</body>
 </html>
+
+<style>
+	.post-layout {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 290px;
+		gap: 1rem;
+	}
+
+	.post-main {
+		min-width: 0;
+	}
+
+	.post-side {
+		position: sticky;
+		top: 6.1rem;
+		height: fit-content;
+	}
+
+	.hero-image img {
+		display: block;
+		width: 100%;
+		border-radius: 1rem;
+		border: 1px solid var(--line);
+		box-shadow: var(--box-shadow);
+	}
+
+	.post-header {
+		padding: 1.4rem;
+		margin-top: 1rem;
+	}
+
+	.meta-line {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.65rem;
+		align-items: center;
+		margin: 0 0 0.6rem;
+		font-size: 0.86rem;
+		color: var(--text-soft);
+	}
+
+	.meta-line span {
+		padding: 0.18rem 0.55rem;
+		border-radius: 999px;
+		border: 1px solid var(--line);
+		background: color-mix(in srgb, var(--bg-card) 72%, transparent);
+	}
+
+	.meta-line .updated-date {
+		font-style: italic;
+	}
+
+	.post-header h1 {
+		margin: 0 0 0.5rem;
+		line-height: 1.08;
+	}
+
+	.post-header p {
+		margin: 0;
+	}
+
+	.article-shell {
+		margin-top: 1rem;
+		padding: 1.2rem;
+		border-radius: 1rem;
+		border: 1px solid var(--line);
+		background: color-mix(in srgb, var(--bg-elevated) 74%, transparent);
+	}
+
+	.article-content {
+		max-width: 780px;
+		margin: 0 auto;
+	}
+
+	.article-content :global(h2),
+	.article-content :global(h3),
+	.article-content :global(h4) {
+		margin-top: 2rem;
+		scroll-margin-top: 6rem;
+	}
+
+	.article-content :global(h2) {
+		padding-bottom: 0.35rem;
+		border-bottom: 1px solid var(--line);
+	}
+
+	.article-content :global(p) {
+		margin-bottom: 1rem;
+	}
+
+	.article-content :global(ul),
+	.article-content :global(ol) {
+		padding-left: 1.2rem;
+		margin-bottom: 1rem;
+		color: var(--text-soft);
+	}
+
+	.article-content :global(li) {
+		margin-bottom: 0.35rem;
+	}
+
+	@media (max-width: 1080px) {
+		.post-layout {
+			grid-template-columns: 1fr;
+		}
+
+		.post-side {
+			position: static;
+			order: -1;
+		}
+	}
+
+	@media (max-width: 720px) {
+		.post-header,
+		.article-shell {
+			padding: 0.95rem;
+		}
+
+		.meta-line {
+			gap: 0.4rem;
+		}
+	}
+</style>

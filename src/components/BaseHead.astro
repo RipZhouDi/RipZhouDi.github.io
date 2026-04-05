@@ -20,6 +20,14 @@ const { title, description, image = FallbackImage } = Astro.props;
 <!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
+<script is:inline>
+	(() => {
+		const THEME_KEY = 'site-theme';
+		const storedTheme = window.localStorage.getItem(THEME_KEY);
+		const safeTheme = storedTheme === 'light' || storedTheme === 'dark' ? storedTheme : 'dark';
+		document.documentElement.dataset.theme = safeTheme;
+	})();
+</script>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="icon" href="/favicon.ico" />
 <link rel="sitemap" href="/sitemap-index.xml" />

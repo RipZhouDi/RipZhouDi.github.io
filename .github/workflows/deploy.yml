@@ -17,16 +17,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # --- 关键新增步骤：强制使用 Node 22 ---
-      - name: Setup Node.js 22
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: 'npm' # 开启缓存加速
-      # ------------------------------------
-
+      # 删掉那个 setup-node 步骤，直接给 withastro 传参！
       - name: Install, build, and upload site
         uses: withastro/action@v3
+        with:
+          node-version: 22    # <-- 关键！必须写在 withastro 的 with 里面
+          package-manager: npm # (可选) 明确告诉它用 npm 安装
 
   deploy:
     needs: build
