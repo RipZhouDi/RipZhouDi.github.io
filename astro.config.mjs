@@ -1,11 +1,8 @@
-// @ts-check
-
+import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
-import { defineConfig } from 'astro/config';
 
-// https://astro.build/config
 export default defineConfig({
-	site: 'https://example.com',
-	integrations: [mdx(), sitemap()],
+  site: 'https://RipZhouDi.github.io',  // <-- 加上这行，非常重要！
+  integrations: [mdx(), sitemap()],
 });
