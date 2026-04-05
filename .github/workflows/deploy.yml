@@ -14,15 +14,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository using git
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      # --- 新增步骤：强制指定 Node.js v22 ---
+      # --- 关键新增步骤：强制使用 Node 22 ---
       - name: Setup Node.js 22
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'npm' # 开启缓存，加快后续构建速度
+          cache: 'npm' # 开启缓存加速
       # ------------------------------------
 
       - name: Install, build, and upload site
