@@ -1,3 +1,4 @@
+﻿@import '@fontsource/geist-sans';
 @import "tailwindcss";
 
 @font-face {
@@ -253,3 +254,4 @@ hr {
 		padding-top: 1.35rem;
 	}
 }
+

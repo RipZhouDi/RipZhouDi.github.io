@@ -1,57 +1,12 @@
----
+﻿---
 const today = new Date();
+import GisLocationEasterEgg from './GisLocationEasterEgg.tsx';
 ---
-
-<footer class="site-footer">
-	<p>© {today.getFullYear()} RipZhouDi · Built for GIS, WebGIS and 3D storytelling.</p>
-	<div class="footer-links">
-		<a href="/blog">博客</a>
-		<a href="/projects">项目展示</a>
-		<a href="https://github.com/RipZhouDi" target="_blank" rel="noreferrer">GitHub</a>
-	</div>
+<footer class="w-full max-w-5xl mx-auto px-4 py-8 border-t border-[#262626] flex items-center justify-between z-10 relative">
+    <div class="flex items-center gap-6">
+        <p class="text-sm text-neutral-500 font-light">&copy; {today.getFullYear()} RipZhouDi. GIS & Web Spatial Engineering.</p>
+    </div>
+    <div class="flex items-center gap-4 text-neutral-500 text-sm group">
+        <GisLocationEasterEgg client:only="react" />
+    </div>
 </footer>
-
-<style>
-	.site-footer {
-		width: min(1120px, calc(100% - 2rem));
-		margin: 0 auto 2rem;
-		padding: 1.1rem 1rem;
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 1rem;
-		font-size: 0.9rem;
-		color: var(--text-soft);
-		border: 1px solid var(--line);
-		border-radius: 1rem;
-		background: color-mix(in srgb, var(--bg-elevated) 80%, transparent);
-		backdrop-filter: blur(10px);
-	}
-
-	.site-footer p {
-		margin: 0;
-	}
-
-	.footer-links {
-		display: flex;
-		align-items: center;
-		gap: 0.9rem;
-	}
-
-	.footer-links a {
-		text-decoration: none;
-		color: var(--text-soft);
-	}
-
-	.footer-links a:hover {
-		color: var(--text);
-	}
-
-	@media (max-width: 720px) {
-		.site-footer {
-			flex-direction: column;
-			text-align: center;
-			margin-bottom: 1.2rem;
-		}
-	}
-</style>
